@@ -1,21 +1,21 @@
 {
-  "development": {
-    "url": "postgres://eunjzloy:5VJlUE0-Df4uvGwH9IpXkt1n6-IEzf6n@hattie.db.elephantsql.com/eunjzloy"
-  },
-  "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "operatorsAliases": "0"
-  },
-  "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "operatorsAliases": "0"
-  }
+	"development": {
+		"url": "postgres://sbujflgl:p4IEPgy4eTVD7OIDCFb9X2F3S1YnBl5C@mouse.db.elephantsql.com/sbujflgl"
+	},
+	"test": {
+		"username": "root",
+		"password": null,
+		"database": "database_test",
+		"host": "127.0.0.1",
+		"dialect": "postgres",
+		"operatorsAliases": "0"
+	},
+	"production": {
+		"username": "root",
+		"password": null,
+		"database": "database_production",
+		"host": "127.0.0.1",
+		"dialect": "postgres",
+		"operatorsAliases": "0"
+	}
 }

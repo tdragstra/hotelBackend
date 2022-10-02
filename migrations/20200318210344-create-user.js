@@ -25,6 +25,10 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
+			isAdmin: {
+				type: Sequelize.BOOLEAN,
+				defaultValue: false,
+			},
 			address1: {
 				type: Sequelize.STRING,
 				allowNull: false,

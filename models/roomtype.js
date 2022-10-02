@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			roomType.belongsTo(models.room, { foreignKey: "roomId" });
+			roomType.belongsTo(models.option, { through: "roomOption" });
 		}
 	}
 	roomType.init(

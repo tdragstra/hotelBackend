@@ -10,7 +10,7 @@ module.exports = {
 			},
 			allowNull: false,
 			onUpdate: "CASCADE",
-			onDelete: "SET NULL",
+			onDelete: "CASCADE",
 		}),
 			await queryInterface.addColumn("roomOptions", "optionId", {
 				type: Sequelize.INTEGER,
@@ -20,7 +20,7 @@ module.exports = {
 				},
 				allowNull: false,
 				onUpdate: "CASCADE",
-				onDelete: "SET NULL",
+				onDelete: "CASCADE",
 			});
 	},
 

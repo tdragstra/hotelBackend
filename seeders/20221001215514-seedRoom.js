@@ -6,14 +6,26 @@ module.exports = {
 			"rooms",
 			[
 				{
-					size: 28,
+					size: 26,
 					roomTypeId: 1,
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},
 				{
-					size: 32,
+					size: 26,
 					roomTypeId: 2,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				},
+				{
+					size: 26,
+					roomTypeId: 3,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				},
+				{
+					size: 38,
+					roomTypeId: 4,
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},

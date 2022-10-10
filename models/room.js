@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
 		 * The `models/index` file will call this method automatically.
 		 */
 		static associate(models) {
-			room.hasOne(models.roomType, { foreignKey: "roomTypeId" }); // this would be implied but still.
+			room.belongsTo(models.roomType, { foreignKey: "roomTypeId" }); // this would be implied but still.
 			room.belongsToMany(models.reservation, { through: "reservationRoom" });
 		}
 	}

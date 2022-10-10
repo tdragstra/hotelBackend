@@ -1,5 +1,4 @@
 "use strict";
-import reservation from "./reservation";
 
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
@@ -10,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 		 * The `models/index` file will call this method automatically.
 		 */
 		static associate(models) {
-			// user.hasMany(models.reservation);
+			user.hasMany(models.reservation, { foreignKey: "userId" }); //implied but still
 		}
 	}
 	user.init(

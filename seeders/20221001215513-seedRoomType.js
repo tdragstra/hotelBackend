@@ -6,20 +6,30 @@ module.exports = {
 			"roomTypes",
 			[
 				{
-					name: "Small room with 1 double or 2 singles",
+					name: "Room with 1 king size bed",
+					price: 67,
+					capacity: 1,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				},
+				{
+					name: "Room with 1 king size or 2 single beds",
 					price: 85,
+					capacity: 2,
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},
 				{
-					name: "Medium room with 1 double and 1 sofa",
+					name: "Room with 1 king size and 1 extra bed",
 					price: 105,
+					capacity: 3,
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},
 				{
-					name: "Large room with 1 double and 2 sofa's",
+					name: "Room with 1 king size bed and 2 extra beds",
 					price: 125,
+					capacity: 4,
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},

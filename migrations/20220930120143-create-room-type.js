@@ -16,6 +16,19 @@ module.exports = {
 				type: Sequelize.FLOAT,
 				allowNull: false,
 			},
+			singleBeds: {
+				type: Sequelize.BOOLEAN,
+				allowNull: false,
+				defaultValue: false,
+			},
+			available: {
+				type: Sequelize.BOOLEAN,
+				defaultValue: true,
+			},
+			capacity: {
+				type: Sequelize.INTEGER,
+				alowNull: false,
+			},
 			createdAt: {
 				allowNull: false,
 				type: Sequelize.DATE,

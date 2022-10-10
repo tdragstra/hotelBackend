@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			reservation.hasOne(models.status);
-			reservation.belongsToMany(models.rooms, { through: "reservationRoom" });
+			reservation.belongsToMany(models.room, { through: "reservationRoom" });
+			reservation.belongsTo(models.user);
 		}
 	}
 	reservation.init(
@@ -25,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
 			// statusId: DataTypes.INTEGER,
 			arrivalTime: { type: DataTypes.TIME, allowNull: false },
 			totalPrice: DataTypes.FLOAT,
-			persons: { type: DataTypes.INTEGER, allowNull: false },
+			adults: { type: DataTypes.INTEGER, allowNull: false },
+			children: { type: DataTypes.INTEGER  },
 			// userId: { type: DataTypes.INTEGER, allowNull: false },
 			// roomId: { type: DataTypes.INTEGER, allowNull: false },
 		},

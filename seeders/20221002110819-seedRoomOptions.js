@@ -17,6 +17,30 @@ module.exports = {
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},
+				{
+					roomTypeId: 3,
+					optionId: 1,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				},
+				{
+					roomTypeId: 1,
+					optionId: 2,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				},
+				{
+					roomTypeId: 1,
+					optionId: 3,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				},
+				{
+					roomTypeId: 1,
+					optionId: 4,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				},
 			],
 			{}
 		);

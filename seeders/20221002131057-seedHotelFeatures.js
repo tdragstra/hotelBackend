@@ -6,7 +6,7 @@ module.exports = {
 			"hotelFeatures",
 			[
 				{
-					name: "Trainstation",
+					name: "Train station",
 					type: "location",
 					distanceTo: 2.5,
 					createdAt: new Date(),

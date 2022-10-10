@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
 	class roomType extends Model {
 		/**
@@ -8,8 +9,11 @@ module.exports = (sequelize, DataTypes) => {
 		 * The `models/index` file will call this method automatically.
 		 */
 		static associate(models) {
-			roomType.belongsTo(models.room);
-			roomType.belongsToMany(models.option, { through: "roomOption" });
+			roomType.hasMany(models.room);
+			roomType.belongsToMany(models.option, {
+				through: "roomOption",
+				foreignKey: "roomTypeId",
+			});
 		}
 	}
 	roomType.init(
@@ -22,8 +26,15 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.FLOAT,
 				allowNull: false,
 			},
-			singleBeds: { type: DataTypes.BOOLEAN, allowNull: false },
-			available: { type: DataTypes.BOOLEAN, defaultValue: true },
+
+			capacity: {
+				type: DataTypes.INTEGER,
+				allowNull: false,
+			},
+			available: {
+				type: DataTypes.BOOLEAN,
+				defaultValue: true,
+			},
 		},
 		{
 			sequelize,

@@ -14,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
 	hotelConfig.init(
 		{
 			name: DataTypes.STRING,
-			locationLat: DataTypes.FLOAT(10, 6),
-			locationLong: DataTypes.FLOAT(10, 6),
+			locationLat: DataTypes.FLOAT,
+			locationLong: DataTypes.FLOAT,
 			contactEmail: { type: DataTypes.STRING, allowNull: false },
 			adminEmail: { type: DataTypes.STRING, allowNull: false },
 			seoDescription: {

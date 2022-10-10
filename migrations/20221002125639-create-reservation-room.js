@@ -28,6 +28,19 @@ module.exports = {
 				onUpdate: "CASCADE",
 				onDelete: "CASCADE",
 			},
+			singleBeds: {
+				type: Sequelize.BOOLEAN,
+				defaultValue: false,
+			},
+			requestBalcony: {
+				type: Sequelize.BOOLEAN,
+				defaultValue: false,
+			},
+			requestGroundFloor: {
+				type: Sequelize.BOOLEAN,
+				allowNull: false,
+				defaultValue: false,
+			},
 			createdAt: {
 				allowNull: false,
 				type: Sequelize.DATE,

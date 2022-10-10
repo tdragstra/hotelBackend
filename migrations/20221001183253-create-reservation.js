@@ -19,9 +19,13 @@ module.exports = {
 			// statusId: {
 			// 	type: Sequelize.INTEGER,
 			// },
-			persons: {
+			adults: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
+			},
+			children: {
+				type: Sequelize.INTEGER,
+				defaultValue: 0,
 			},
 			arrivalTime: {
 				type: Sequelize.TIME,

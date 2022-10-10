@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
 		 * The `models/index` file will call this method automatically.
 		 */
 		static associate(models) {
-			option.belongsToMany(roomType, { through: "roomOption" });
+			option.belongsToMany(models.roomType, { through: "roomOption" });
 		}
 	}
 	option.init(
@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		{
 			sequelize,
-			modelName: "options",
+			modelName: "option",
 		}
 	);
-	return options;
+	return option;
 };

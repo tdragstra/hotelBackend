@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
 		 * The `models/index` file will call this method automatically.
 		 */
 		static associate(models) {
-			reservation.hasOne(models.status);
+			reservation.belongsTo(models.status);
 			reservation.belongsToMany(models.room, { through: "reservationRoom" });
 			reservation.belongsTo(models.user);
 		}
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
 			arrivalTime: { type: DataTypes.TIME, allowNull: false },
 			totalPrice: DataTypes.FLOAT,
 			adults: { type: DataTypes.INTEGER, allowNull: false },
-			children: { type: DataTypes.INTEGER  },
+			children: { type: DataTypes.INTEGER },
 			// userId: { type: DataTypes.INTEGER, allowNull: false },
 			// roomId: { type: DataTypes.INTEGER, allowNull: false },
 		},

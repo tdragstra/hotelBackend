@@ -1,7 +1,7 @@
 const e = require("express");
 const { Router } = require("express");
 const auth = require("../auth/middleware");
-const Reservation = require("../models/reservation");
+const Reservation = require("../models").reservation;
 const Room = require("../models").room;
 const RoomType = require("../models").roomType;
 const ReservationRoom = require("../models").reservationRoom;
@@ -52,49 +52,62 @@ router.post("/createReservation", async (req, res, next) => {
 	const {
 		fromDate,
 		toDate,
-		arrivalTime,
-		totalPrice,
-		adults,
-		children,
-		firstName,
-		lastName,
-		email,
-		password,
-		address1,
-		address2,
-		houseNumber1,
-		houseNumber2,
-		postalCode,
-		country,
-		business,
-		businessName,
-		businessTaxNr,
-	} = req.body;
+		user,
+		rooms,
+		// arrivalTime,
+		// totalPrice,
+		// adults,
+		// children,
+		// user.firstName,
+		// user.lastName,
+		// user.email,
+		// // user.password,
+		// user.address1,
+		// user.address2,
+		// user.houseNumber1,
+		// user.houseNumber2,
+		// postalCode,
+		// country,
+		// business,
+		// businessName,
+		// businessTaxNr,
+	} = req.body.e;
+	// console.log(req.body.e);
 	try {
-		const user = await User.create({
+		const {
 			firstName,
 			lastName,
 			email,
-			password,
 			address1,
 			address2,
 			houseNumber1,
 			houseNumber2,
-			postalCode,
-			country,
-			business,
-			businessName,
-			businessTaxNr,
+		} = user;
+
+		const user1 = await User.create({
+			firstName,
+			lastName,
+			email: "karla43@gmail.com",
+			password: "bla",
+			address1,
+			address2,
+			houseNumber1,
+			houseNumber2,
+			postalCode: 1234,
+			country: "Holland",
+			// business: false,
+			// businessName: 'hello'
+			// businessTaxNr: '12'
 		});
 
-		const reservation = Reservation.create({
+		const reservation = await Reservation.create({
 			fromDate,
 			toDate,
-			arrivalTime,
-			totalPrice,
-			adults,
-			children,
-			userId: user.id,
+			arrivalTime: "15:15:15",
+			totalPrice: 200,
+			adults: 1,
+			children: 1,
+			userId: 1,
 			statusId: 1,
 		});
 		const arrayOfPromises = rooms.map(async (item) => {
@@ -102,10 +115,19 @@ router.post("/createReservation", async (req, res, next) => {
 				roomId: item.id,
 				reservationId: reservation.id,
 			});
-			return allRooms;
+			return reservationRoom;
 		});
 		await Promise.all(arrayOfPromises);
-	} catch (e) {}
+
+		// console.log(arrayOfPromises);
+		// const userData = User.findByPk(user1.id, { include: { model: Reservation, include: Room } })
+		// res.status(200).send({ token, userData });
+		res.status(200).send({ user1, reservation });
+		// res.status(200).send({ message: "request ok", reservation, user });
+	} catch (e) {
+		console.log("erreurBack", e.message);
+		next(e);
+	}
 });
 
 module.exports = router;

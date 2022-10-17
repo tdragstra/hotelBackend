@@ -60,6 +60,7 @@ module.exports = (sequelize, DataTypes) => {
 			},
 			business: {
 				type: DataTypes.BOOLEAN,
+				defaultValue: false,
 			},
 			businessName: {
 				type: DataTypes.STRING,

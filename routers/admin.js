@@ -6,7 +6,10 @@ const RoomOption = require("../models").roomOption;
 const Option = require("../models").option;
 const Features = require("../models/").hotelFeature;
 const Reservations = require("../models").reservation;
-
+const User = require("../models").user;
+const ReservationRooms = require("../models").reservationRoom;
+const { Op } = require("sequelize");
+const { getRounds } = require("bcrypt");
 const router = new Router();
 
 router.get("/roomtypes", async (req, res, next) => {
@@ -30,7 +33,7 @@ router.get("/roomoptions", async (req, res, next) => {
 					model: Option,
 					required: false,
 					attributes: {
-						exclude: ["password", "created-at", "isAdmin", "accountBlocked"],
+						// exclude: ["password", "created-at", "isAdmin", "accountBlocked"],
 					},
 				},
 			],
@@ -68,9 +71,11 @@ router.delete("/features/delete/:id", async (req, res, next) => {
 	try {
 		const { id } = req.params;
 		const feature = await Features.findByPk(id);
-
-		await feature.destroy();
+		if (!feature) {
+			return res.status(404).send({ message: "Feature ID not found" });
+		}
 		res.status(200).send({ message: "Feature deleted", feature });
+		await feature.destroy();
 	} catch (e) {
 		console.log("error", e.message);
 	}
@@ -78,8 +83,24 @@ router.delete("/features/delete/:id", async (req, res, next) => {
 
 router.get("/reservations", async (req, res, next) => {
 	try {
-		const reservations = await Reservations.findAll();
+		const reservations = await Reservations.findAll({
+			order: [["createdAt", "DESC"]],
+			include: [
+				{
+					model: Room,
+				},
 
+				{
+					model: User,
+				},
+			],
+			// 		attributes: {
+			// 			exclude: ["password", "isAdmin"],
+			// 		},
+			// 	},
+			// ],
+		});
+		console.log(reservations);
 		res.status(200).send(reservations);
 	} catch (e) {
 		"error", console.log(e);
@@ -94,9 +115,99 @@ router.patch("/reservations/edit/:id", async (req, res, next) => {
 		if (!req.body) {
 			return console.log("nobody");
 		}
-		const { fromDate, toDate, totalPrice, adults, children } = req.body;
-		reservation.update({ fromDate, toDate, totalPrice, adults, children });
-		res.status(200).send({ reservation, message: "Reservation updated" });
+		const { fromDate, toDate, totalPrice, adults, children, newRooms } =
+			req.body;
+		await reservation.update({
+			fromDate,
+			toDate,
+			totalPrice,
+			adults,
+			children,
+		});
+		console.log("-----new rooms-----", newRooms);
+
+		// let findNewRooms = await Room.findAll((e) => e.id === 1);
+
+		// console.log(findNewRooms);
+		// if (newRooms) {
+
+		const getRoomTable = [];
+
+		// console.log("length---------", newRooms.length); // ---------------- length of new rooms
+
+		for (let i = 0; i < (await newRooms.length); i++) {
+			// console.log(newRooms[i].id);
+			getRoomTable.push(
+				await Room.findAll({
+					where: { id: newRooms[i].id },
+				})
+			);
+			// getRoomTable.push() = await Room.findAll({
+			// 	where: { id: { [Op.in]: newRooms.map((i) => i.id)} },
+			// });
+		}
+		console.log(
+			"get rooms from table ",
+			getRoomTable,
+			"length",
+			getRoomTable.length
+		);
+
+		let roomObs = await Room.findAll({
+			where: { id: { [Op.in]: newRooms.map((i) => i.id) } },
+		});
+
+		// console.log("----------index roomObs------------", roomObs);
+
+		await reservation.setRooms(null, {
+			through: { ReservationRooms },
+		});
+
+		// console.log("---------lenght---------", roomObs.length); // this is two, should  be three
+
+		for (let i = 0; i < getRoomTable.length; i++) {
+			await reservation.addRooms(getRoomTable[i], {
+				through: {
+					ReservationRooms,
+					singleBeds: newRooms[i].singleBeds,
+					requestBalcony: newRooms[i].requestBalcony,
+				},
+			});
+		}
+		// await reservation.setRooms(roomObs, {
+		// 	through: { ReservationRooms, singleBeds: true, requestBalcony: false },
+		// });
+		// }
+
+		// for (let i = 0; i < reservation.rooms.length; i++) {
+
+		// }
+
+		res
+			.status(200)
+			.send({ reservation, message: "Reservation updated", getRoomTable });
+	} catch (e) {
+		"error", console.log(e);
+	}
+});
+
+router.delete("/reservations/delete/:id", async (req, res, next) => {
+	const { id } = req.params;
+	try {
+		const reservation = await Reservations.findByPk(id);
+		if (!reservation) {
+			return res.status(404).send("Reservation not found");
+		}
+
+		// if (!isAdmin) {
+		// 	return res.status(403).send({
+		// 		message:
+		// 			"Only admins can delete reservations, login with admin account",
+		// 	});
+		// }
+
+		await reservation.destroy();
+		res.status(200).send({ reservation, message: "Reservation deleted" });
 	} catch (e) {
 		"error", console.log(e);
 	}

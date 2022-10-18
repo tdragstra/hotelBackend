@@ -87,7 +87,7 @@ router.post("/createReservation", async (req, res, next) => {
 		const user1 = await User.create({
 			firstName,
 			lastName,
-			email: "karla43@gmail.com",
+			email: "ks111@gmail.com",
 			password: "bla",
 			address1,
 			address2,

@@ -96,7 +96,13 @@ router.get("/reservations", async (req, res, next) => {
 				},
 				{
 					model: ReservationRooms,
+
+					// include: Room,
 				},
+				// {
+				// 	model: Room,
+				// 	include: RoomType,
+				// },
 			],
 			// 		attributes: {
 			// 			exclude: ["password", "isAdmin"],

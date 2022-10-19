@@ -87,7 +87,7 @@ router.post("/createReservation", async (req, res, next) => {
 		const user1 = await User.create({
 			firstName,
 			lastName,
-			email: "jekalezusters@gmail.com",
+			email: "bla111111@gmail.com",
 			password: "bla",
 			address1,
 			address2,
@@ -122,7 +122,10 @@ router.post("/createReservation", async (req, res, next) => {
 		// console.log(arrayOfPromises);
 		// const userData = User.findByPk(user1.id, { include: { model: Reservation, include: Room } })
 		// res.status(200).send({ token, userData });
-		res.status(200).send({ user1, reservation });
+		res
+			.status(200)
+			.send({ user1, reservation, message: "Reservation success" });
+
 		// res.status(200).send({ message: "request ok", reservation, user });
 	} catch (e) {
 		console.log("erreurBack", e.message);

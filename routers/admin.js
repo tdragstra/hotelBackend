@@ -7,6 +7,7 @@ const Option = require("../models").option;
 const Features = require("../models/").hotelFeature;
 const Reservations = require("../models").reservation;
 const User = require("../models").user;
+const Status = require("../models").status;
 const ReservationRooms = require("../models").reservationRoom;
 const { Op } = require("sequelize");
 const { getRounds } = require("bcrypt");
@@ -96,13 +97,28 @@ router.get("/reservations", async (req, res, next) => {
 				},
 				{
 					model: ReservationRooms,
+					required: false,
+					include: [
+						{
+							model: Room,
+							required: false,
+							include: [
+								{
+									model: RoomType,
+									required: false,
+								},
+							],
+						},
+					],
 
 					// include: Room,
 				},
-				// {
-				// 	model: Room,
-				// 	include: RoomType,
-				// },
+				{
+					model: Status,
+					attributes: {
+						exclude: ["createdAt", "updatedAt"],
+					},
+				},
 			],
 			// 		attributes: {
 			// 			exclude: ["password", "isAdmin"],

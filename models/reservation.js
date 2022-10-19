@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
 		static associate(models) {
 			reservation.belongsTo(models.status);
 			reservation.belongsToMany(models.room, { through: "reservationRoom" });
+			reservation.hasMany(models.reservationRoom);
 			reservation.belongsTo(models.user);
 		}
 	}

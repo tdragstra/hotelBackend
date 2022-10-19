@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
 		static associate(models) {
 			room.belongsTo(models.roomType, { foreignKey: "roomTypeId" }); // this would be implied but still.
 			room.belongsToMany(models.reservation, { through: "reservationRoom" });
+			room.hasMany(models.reservationRoom);
 		}
 	}
 	room.init(

@@ -7,7 +7,6 @@ const Option = require("../models").option;
 const Features = require("../models/").hotelFeature;
 const Reservations = require("../models").reservation;
 const User = require("../models").user;
-const Status = require("../models").status;
 const ReservationRooms = require("../models").reservationRoom;
 const { Op } = require("sequelize");
 const { getRounds } = require("bcrypt");
@@ -61,8 +60,6 @@ router.post("/features/create", async (req, res, next) => {
 		// const feature = Features.findByPk(id)
 
 		const { name, type, distanceTo } = req.body;
-		console.log(type);
-
 		const feature = await Features.create({ name, type, distanceTo });
 		res.status(200).send({ message: "Feature created", feature });
 	} catch (e) {
@@ -97,27 +94,6 @@ router.get("/reservations", async (req, res, next) => {
 				},
 				{
 					model: ReservationRooms,
-					required: false,
-					include: [
-						{
-							model: Room,
-							required: false,
-							include: [
-								{
-									model: RoomType,
-									required: false,
-								},
-							],
-						},
-					],
-
-					// include: Room,
-				},
-				{
-					model: Status,
-					attributes: {
-						exclude: ["createdAt", "updatedAt"],
-					},
 				},
 			],
 			// 		attributes: {
@@ -149,25 +125,70 @@ router.patch("/reservations/edit/:id", async (req, res, next) => {
 			totalPrice,
 			adults,
 			children,
+			reservationRooms,
 		});
+		console.log("-----new rooms-----", newRooms);
+
+		// let findNewRooms = await Room.findAll((e) => e.id === 1);
+
+		// console.log(findNewRooms);
+		// if (newRooms) {
+
+		const getRoomTable = [];
+
+		// console.log("length---------", newRooms.length); // ---------------- length of new rooms
+
+		for (let i = 0; i < (await newRooms.length); i++) {
+			// console.log(newRooms[i].id);
+			getRoomTable.push(
+				await Room.findAll({
+					where: { id: newRooms[i].id },
+				})
+			);
+			// getRoomTable.push() = await Room.findAll({
+			// 	where: { id: { [Op.in]: newRooms.map((i) => i.id)} },
+			// });
+		}
+		console.log(
+			"get rooms from table ",
+			getRoomTable,
+			"length",
+			getRoomTable.length
+		);
+
+		let roomObs = await Room.findAll({
+			where: { id: { [Op.in]: newRooms.map((i) => i.id) } },
+		});
+
+		// console.log("----------index roomObs------------", roomObs);
 
 		await reservation.setRooms(null, {
-			through: {},
+			through: { ReservationRooms },
 		});
 
-		const arrayOfPromises = reservationRooms.map(async (item) => {
-			const reservationRoom = await ReservationRooms.create({
-				roomId: item.roomId,
-				reservationId: reservation.id,
-				singleBeds: item.singleBeds,
-				requestBalcony: item.requestBalcony,
-				requestGroundFloor: item.requestGroundFloor,
+		// console.log("---------lenght---------", roomObs.length); // this is two, should  be three
+
+		for (let i = 0; i < getRoomTable.length; i++) {
+			await reservation.addRooms(getRoomTable[i], {
+				through: {
+					ReservationRooms,
+					singleBeds: newRooms[i].singleBeds,
+					requestBalcony: newRooms[i].requestBalcony,
+				},
 			});
-			return reservationRoom;
-		});
-		await Promise.all(arrayOfPromises);
+		}
+		// await reservation.setRooms(roomObs, {
+		// 	through: { ReservationRooms, singleBeds: true, requestBalcony: false },
+		// });
+		// }
 
-		res.status(200).send({ reservation, message: "Reservation updated" });
+		// for (let i = 0; i < reservation.rooms.length; i++) {
+
+		// }
+
+		res
+			.status(200)
+			.send({ reservation, message: "Reservation updated", getRoomTable });
 	} catch (e) {
 		"error", console.log(e);
 	}
@@ -176,9 +197,8 @@ router.patch("/reservations/edit/:id", async (req, res, next) => {
 router.delete("/reservations/delete/:id", async (req, res, next) => {
 	const { id } = req.params;
 	try {
-		const reservation = await Reservations.findByPk(parseInt(id));
+		const reservation = await Reservations.findByPk(id);
 		if (!reservation) {
-			console.log("-----not found");
 			return res.status(404).send("Reservation not found");
 		}
 

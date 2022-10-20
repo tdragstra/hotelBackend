@@ -1,4 +1,3 @@
-const e = require("express");
 const { Router } = require("express");
 const auth = require("../auth/middleware");
 const Reservation = require("../models").reservation;
@@ -10,6 +9,9 @@ const Features = require("../models").features;
 const Option = require("../models").option;
 const router = new Router();
 const User = require("../models").user;
+const { SALT_ROUNDS } = require("../config/constants");
+const bcrypt = require("bcrypt");
+const { toJWT } = require("../auth/jwt");
 
 router.get("/rooms", async (req, res, next) => {
 	try {
@@ -49,29 +51,7 @@ router.get("/features", async (req, res, next) => {
 });
 
 router.post("/createReservation", async (req, res, next) => {
-	const {
-		fromDate,
-		toDate,
-		user,
-		rooms,
-		// arrivalTime,
-		// totalPrice,
-		// adults,
-		// children,
-		// user.firstName,
-		// user.lastName,
-		// user.email,
-		// // user.password,
-		// user.address1,
-		// user.address2,
-		// user.houseNumber1,
-		// user.houseNumber2,
-		// postalCode,
-		// country,
-		// business,
-		// businessName,
-		// businessTaxNr,
-	} = req.body.e;
+	const { fromDate, toDate, user, rooms, guests, arrivalTime } = req.body.e;
 	// console.log(req.body.e);
 	try {
 		const {
@@ -80,34 +60,40 @@ router.post("/createReservation", async (req, res, next) => {
 			email,
 			address1,
 			address2,
+			postalCode,
+			password,
 			houseNumber1,
 			houseNumber2,
+			selectCountry,
+			business,
+			businessName,
+			businessTaxNr,
 		} = user;
 
 		const user1 = await User.create({
 			firstName,
 			lastName,
-			email: "bla111111@gmail.com",
-			password: "bla",
+			email,
+			password: bcrypt.hashSync(password, SALT_ROUNDS),
 			address1,
 			address2,
 			houseNumber1,
 			houseNumber2,
-			postalCode: 1234,
-			country: "Holland",
-			// business: false,
-			// businessName: 'hello'
-			// businessTaxNr: '12'
+			postalCode,
+			country: selectCountry,
+			business,
+			businessName,
+			businessTaxNr,
 		});
 
 		const reservation = await Reservation.create({
 			fromDate,
 			toDate,
-			arrivalTime: "15:15:15",
+			arrivalTime,
 			totalPrice: 200,
-			adults: 1,
-			children: 1,
-			userId: 1,
+			adults: guests.adults,
+			children: guests.children,
+			userId: user1.id,
 			statusId: 1,
 		});
 		const arrayOfPromises = rooms.map(async (item) => {
@@ -119,12 +105,15 @@ router.post("/createReservation", async (req, res, next) => {
 		});
 		await Promise.all(arrayOfPromises);
 
+		console.log("------------pass---------", user1.password);
+		delete user1.dataValues["password"]; // don't send back the password hash
+		const token = toJWT({ userId: user1.id });
 		// console.log(arrayOfPromises);
 		// const userData = User.findByPk(user1.id, { include: { model: Reservation, include: Room } })
 		// res.status(200).send({ token, userData });
 		res
 			.status(200)
-			.send({ user1, reservation, message: "Reservation success" });
+			.send({ user1, token, reservation, message: "Reservation success" });
 
 		// res.status(200).send({ message: "request ok", reservation, user });
 	} catch (e) {

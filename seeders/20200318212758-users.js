@@ -21,6 +21,20 @@ module.exports = {
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},
+				{
+					firstName: "Hendrik",
+					lastName: "Petersen",
+					email: "hendrikpetersen@gmail.com",
+					password: bcrypt.hashSync("123", SALT_ROUNDS),
+					isAdmin: false,
+					address1: "Amsterdamseweg",
+					houseNumber1: 10,
+					postalCode: "12311",
+					country: "Germany",
+					business: false,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				},
 			],
 			{}
 		);

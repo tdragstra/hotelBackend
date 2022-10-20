@@ -79,7 +79,7 @@ router.get("/me", authMiddleware, async (req, res) => {
 	const reservation = await Reservation.findAll({
 		where: { userId: req.user.id },
 		// include: [Room],
-		order: [[Reservation, "createdAt", "DESC"]],
+		// order: [[Reservation, "createdAt", "DESC"]],
 	});
 	// don't send back the password hash
 	delete req.user.dataValues["password"];
